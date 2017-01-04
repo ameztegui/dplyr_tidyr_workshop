@@ -5,6 +5,169 @@ output: html_notebook
 
 
 
-```{r}
+```{r introduccion}
 install.packages("tidyverse")
+library(tidyr)
+library(dplyr)
+library(ggplot2)
+```
+
+
+```{r exerc.gather}
+especies_long <- gather(especies,CD, n,-Codi, -Especie)
+especies_long <- separate(especies_long,col=CD, into = c("Nombre", "CD"))
+especies_long
+```
+
+```{r exerc.spread}
+especies_unite <- unite(especies_long,CD,Nombre, CD)
+spread(especies_unite, CD,n)
+```
+
+``` {r exerc. filter}
+# Encontrar parcelas en Barcelona o Girona
+
+    filter (parcelas, Provincia =="08" | Provincia =="17")
+    filter (parcelas, Provincia %in% c("08", "17"))
+    #Not this!
+    filter(parcelas, Provincia =="08" | "17")
+    
+# Encontrar parcelas que se acabaron en enero de 2001
+    
+    filter (parcelas, FechaFin < "2001-02-01" & FechaFin > "2000-12-31")
+    filter (parcelas, FechaFin < "2001-02-01", FechaFin > "2000-12-31")
+
+# Encontrar las parcelas que se tardó más de dos hora
+    filter(parcelas, (HoraFin - HoraIni) >7200)
+
+```
+
+
+``` {r exerc. select}
+
+# Cuatro maneras de seleccionar las variables que marcan la fecha de inicio y fin de medicion de las parcelas
+select(parcelas, FechaIni, FechaFin)
+select(parcelas, FechaIni:FechaFin)
+select(parcelas, contains("Fecha"))
+select(parcelas, starts_with("Fecha"),-FechaPh)
+select(parcelas, contains("Fecha"))
+```
+
+
+```{r exerc. arrange}
+# Ordenar por fecha y hora de medicion
+arrange(parcelas, FechaFin, HoraFin)
+
+# Parcelas que se empezaron a medir más tarde
+arrange(parcelas,desc(HoraIni))
+
+# Parcelas que tardaron más en medirse
+arrange(parcelas, desc(HoraFin-HoraIni))
+```
+
+``` {r exerc. mutate}
+head(mayores)
+# Calcula el crecimiento en cm en base al diámetro en el IFN2 y el IFN3. ¿De qué especie es el árbol que creció más rápido?
+mayores <- mutate (mayores, crec= DiamIf3 - DiamIf2)
+
+# Crear dos nuevas variable que representen el área basimétrica por hectárea que representa cada árbol tanto en el IFN2 como en el IFN3
+mayores <- mutate(mayores, BAIf2= (((pi/4)*(DiamIf2/100)^2)*Fac),
+                  BAIf3= (((pi/4)*(DiamIf3/100)^2)*Fac))
+
+arrange(mayores, desc(BAIf3-BAIf2))
+
+```
+
+
+```{r exerc.summarise}
+
+by_province <- group_by (mayores, Provincia)
+by_plot <- group_by (mayores, Codi)
+by_species <- group_by (mayores, Especie)
+by_CD <- group_by (mayores, CD)
+# Caracterizar valores de diámetro por parcela
+
+
+summarise(by_plot,
+          media = mean(DiamIf3),
+          min = min (DiamIf3),
+          max = max(DiamIf3),
+          q90 = quantile(DiamIf3, 0.9),
+          IQ = IQR(DiamIf3))
+
+```
+
+```{r exerc. pipelines}
+
+diam_medio_especie <- filter(
+    summarise(
+        group_by(
+            filter(
+                mayores,
+                !is.na(DiamIf3)
+            ),
+        Codi, Especie
+        ),
+    diam = mean (DiamIf3),
+    n = n()
+    ),
+n > 5)
+    
+    
+diam_medio_especie <- mayores %>%
+    filter(!is.na(DiamIf3)) %>%
+    group_by(Codi, Especie) %>%
+    summarise(diam=mean(DiamIf3), n = n()) %>%
+    filter(n > 5)    
+    
+# ¿Qué parcelas tienen el mayor crecimiento medio?
+mayores %>%
+    filter(!is.na(DiamIf2),!is.na(DiamIf3)) %>%
+    mutate(crec=DiamIf3-DiamIf2) %>%
+    group_by(Codi) %>%
+    summarise(media=mean(crec), n=n()) %>%
+    #filter(n >10) %>%
+        arrange(desc(media))
+
+# ¿Cuál es la parcela con mayor número de especies?
+mayores %>%
+    group_by(Codi) %>%
+    summarise (especies=n_distinct(Especie)) %>%
+    arrange(desc(especies))
+
+# ¿Hay relación entre ambas variables?
+mayores %>%
+    mutate(crec=DiamIf3-DiamIf2) %>%
+    group_by(Codi) %>%
+        summarise (especies=n_distinct(Especie),
+               crec_medio=mean(crec)) %>%
+    ggplot(aes(especies, crec_medio)) +
+    geom_point() +
+    geom_smooth(method = "lm")
+
+```
+
+
+```{r exerc.grouped mutate}
+# Arboles que crezcan mucho más que la media de la parcela
+mayores %>%
+    mutate(crec=DiamIf3-DiamIf2) %>%
+    group_by(Codi) %>%
+    mutate(mean= mean(crec),
+           des = (crec - mean(crec))/sd(crec)) %>%
+    arrange(desc(des))
+
+# Parcelas donde una especie crece mas que la media de la especie
+mayores %>% 
+    mutate(crec=DiamIf3-DiamIf2) %>%
+    group_by(Especie) %>%
+    mutate(crec_sp = mean(crec)) %>%
+    group_by(Codi, Especie) %>%
+    mutate(crec_sp_plot = mean(crec),
+           inc = (crec_sp_plot /crec_sp))%>%
+    summarise(mean_inc = mean(inc)) %>%
+    arrange(desc(mean_inc))
+
+ 
+              
 ```
