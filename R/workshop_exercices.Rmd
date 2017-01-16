@@ -16,7 +16,7 @@ description: Ejercicios y soluciones durante el seminario 'dplyr y tidyr' realiz
 
 Este es un documento `RMarkdown` generado para mostrar los ejercicios y las soluciones del taller/seminario sobre los paquetes `dplyr` y `tidyr` realizado en Solsona el 24 de enero de 2017. El código y los datos necesarios para generar este documento se pueden encontrar en mi GitHub ([https://github.com/ameztegui/dplyr_workshop](https://github.com/ameztegui/dplyr_workshop)). Para cualquier duda sobre los ejercicios, consultar con Aitor Ameztegui ([ameztegui@gmail.com](ameztegui@gmail.com)).
 
-Los paquetes ` tidyr` y `dplyr` son parte de un conjunto de paquetes que ha dado en llamarse [`tidyverse`](https://cran.r-project.org/web/packages/tidyverse/index.html), creado por [Hadley Wickham](https://github.com/hadley) , científico jefe en RStudio. El `tidyverse` se creó para facilitar el análisis de datos. Consta de paquetes para importar y leer datos, otros para organizarlos y modificarlos, paquetes de análisis y modelización y paquetes de visualización de resultados. En este seminario nos centraremos en `tidyr`, pensado para la organización de datos, y `dplyr`, que se centra en su transformación. Para trabajar con ellos lo primero es instalarlos, si no lo están ya. Podemos instalar de manera conjunta todos los paquetes del `tidyverse` escribiendo ```install.packages("tidyverse")```. Posteriormente, los cargamos mediante:
+Los paquetes ` tidyr` y `dplyr` son parte de un conjunto de paquetes que ha dado en llamarse [`tidyverse`](https://cran.r-project.org/web/packages/tidyverse/index.html), creado por [Hadley Wickham](https://github.com/hadley), científico jefe en RStudio. El `tidyverse` se creó para facilitar el análisis de datos. Consta de paquetes para importar y leer datos, para organizarlos y modificarlos, para el análisis y modelización y para la visualización de resultados. En este seminario nos centraremos en `tidyr`, pensado para la organización de datos, y `dplyr`, que se centra en su transformación. Para trabajar con ellos lo primero es instalarlos, si no lo están ya. Podemos instalar de manera conjunta todos los paquetes del `tidyverse` escribiendo ```install.packages("tidyverse")```. Posteriormente, los cargamos mediante:
 ```{r, results="hide", message=F, warning=FALSE,}
 library(tidyverse)
 ```
@@ -39,7 +39,7 @@ coordenadas <- tbl_df(coordenadas)
 
 ```
 
-Mediante la función `tbl_df` convertimos los data frames 'normales' en *tibbles*. Un *tibble* no es más que un data frame normal, pero presenta algunas ventajas, como el hecho de que imprime en pantalla por defecto las 10 primeras líneas (en vez de todo el data frame) y proporciona información sobre las variables y su tipo. Por lo demás, podemos considerarlas como data frames normales, ya que se comportan como tales a todos los efectos.
+Mediante la función `tbl_df` convertimos los data frames 'normales' en *tibbles*. Un *tibble* no es más que un data frame que presenta algunas ventajas, como el hecho de que imprime en pantalla por defecto las 10 primeras líneas (en vez de todo el data frame) y proporciona información sobre las variables y su tipo. Por lo demás, podemos considerarlas como data frames normales, ya que se comportan como tales a todos los efectos.
 
 En estos ejercicios utilizaremos cuatro data frames con información relativa al segundo y tercer inventario forestal nacional (IFN2 e IFN3) en Cataluña. Los data frames son:
 
@@ -72,11 +72,11 @@ El concepto del [`tidyverse`](https://cran.r-project.org/web/packages/tidyverse/
 
 No siempre los datos están organizados de esta manera, ya que a veces interesa otro tipo de formato. Por ejemplo, si echamos un vistazo a la tabla `especies` veremos que los valores de número de individuos de las distintas clases diamétricas están en diferentes columnas. Este formato puede ser más conveniente para introducir los datos o para determinados tipos de análisis, pero en general el formato *tidy* facilita el procesado y análisis, sobre todo en lenguajes vectorizados como `R`.
 
-```{r, results="hide"}
+```{r, results="hide", warning=FALSE}
 View(especies)
 ```
 
-El paquete `tidyr` permite cambiar la organización de los datos, de manera que los dispongamos en el formato necesario para nuestro análisis. Tiene cuatro verbos (funciones) básicos: 
+El paquete `tidyr` permite cambiar la forma de organización de los datos, de manera que los dispongamos en el formato necesario para nuestro análisis. Tiene cuatro verbos (funciones) básicos: 
 
 * `gather` reúne variables que están en varias columnas y las convierte en dos variables: un factor (*key*) y una variable numérica (*value*).
 
@@ -99,7 +99,7 @@ Primero echemos un ojo a la base de datos que debemos transformar
 glimpse(especies)
 ```
 
-Para convertirlo a formato 'largo', especificaremos primero el data frame, después, el nuevo factor a crear (*key*), la nueva variable numérica (*value*). Para especificar las columnas a agregar tenemos tres opciones equivalentes:
+Para convertirlo a formato 'largo', especificaremos primero el data frame, después, el nuevo factor a crear (*key*), la nueva variable numérica (*value*), y por último las columnas a agregar. Para especificar esto último tenemos tres opciones equivalentes:
 
 * (A) Especificar expresamente las variables que queremos reunir
 
@@ -110,21 +110,22 @@ Para convertirlo a formato 'largo', especificaremos primero el data frame, despu
     
 * (B) Especificar el intervalo de variables que queremos reunir
 
-```{r, results="hide"}
+```{r,results="hide"}
     gather(especies, CD, n, CD_10:CD_70)
 ```
     
 * (C) Especificar las variables que NO queremos reunir (con -). El resto de variables se asume que forma parte del proceso de agrupamiento. 
 
-```{r, results="hide"}
+```{r,results="hide"}
      gather(especies,CD, n,-Codi, -Especie)
 ```
 
-Una vez convertido el data frame al nuevo formato, podemos convertir la nueva variable "CD" en dos nuevas variables, que llamaremos "Nombre" y "CD", usando `separate`
-
+Si ejecutamos los tres comandos de arriba, vemos que las tres opciones producen el mismo resultado. Una vez convertido el data frame al nuevo formato, podemos dividir la nueva variable "CD" en dos nuevas variables, que llamaremos "Nombre" y "CD", usando `separate`. Si no especificamos dónde debe hacerse la separación, esta función la hace por defecto en el primer carácter no alfanumérico que encuentre.
+ 
 ```{r, results="hide"}
     especies_long <-   gather(especies,CD, n,-Codi, -Especie)
-    especies_long <- separate(especies_long, col=CD, into = c("Nombre", "CD"))
+    especies_long<-separate(especies_long, col=CD, into = c("Nombre", "CD"))
+    especies_long
 ```
 
 
@@ -159,7 +160,7 @@ Si `tidyr` sirve para organizar las bases de datos, `dplyr` sirve para transform
 
 * `arrange` ordenar el data frame en base a una o varias variables
 
-* `mutate` crear nuevas variables
+* `mutate` crea nuevas variables
 
 * `summarise` crear nuevas variables que resumen los valores de una variable (media, suma, etc)
 
@@ -175,17 +176,18 @@ Para practicar la función `filter` probemos a encontrar las parcelas del IFN que
 
 * 3.1 Se encuentren en Barcelona (08) o Girona (17). Tenemos dos opciones
 
-``` {r, results="hide"}
-
+``` {r,results="hide"}
     # Opción 1
     filter (parcelas, Provincia =="08" | Provincia =="17")
+```
 
+```{r,results="hide"}
     # Opción 2
     filter (parcelas, Provincia %in% c("08", "17"))
     
 ```
 
-En cambio, la siguiente opción no sería válida, ya que hay que especificar expresamente la variable en cada nueva condición.
+Veremos que ambas opciones producen exactamente el mismo resultado. En cambio, la siguiente opción no sería válida, ya que hay que especificar expresamente la variable en cada nueva condición.
 
 ``` {r, eval=FALSE, results="hide"}
 
@@ -195,13 +197,15 @@ filter(parcelas, Provincia =="08" | "17")
 
 * 3.2 Parcelas que se acabaron de medir en enero de 2001
 
-Para esto debemos definir que la fecha de finalización sea posterior al 31 de diciembre de 2000 y anterior al 1 de febrero de 2001. Tenemos dos maneras de hacerlo: la primera implica utilizar el operador `&` para indicar que queremos las parcelas que cumplen un criterio y el otro. La segunda opción sería simplemente encadenar los criterios mediante una coma, ya que `filter` asume que se deben cumplir todos ellos.
+Para esto debemos encontrar las parcelas en las que la fecha de finalización sea posterior al 31 de diciembre de 2000 y anterior al 1 de febrero de 2001. Tenemos dos maneras de hacerlo: la primera implica utilizar el operador `&` para indicar que queremos las parcelas que cumplen ambos criterios. La segunda opción sería simplemente encadenar los criterios mediante una coma, ya que `filter` asume que se deben cumplir todos ellos.
 
 ``` {r, results="hide"}
 
     # Opción 1
     filter (parcelas, FechaFin < "2001-02-01" & FechaFin > "2000-12-31")
+```
 
+``` {r, results="hide"}
     # Opción 2
     filter (parcelas, FechaFin < "2001-02-01", FechaFin > "2000-12-31")
     
@@ -214,34 +218,36 @@ Para esto debemos definir que la fecha de finalización sea posterior al 31 de di
     filter(parcelas, (HoraFin - HoraIni) >7200)
 
 ```
+
 Como vemos, podemos hacer operaciones dentro de las condiciones de `filter`. En este caso, queremos que la diferencia entre la hora de finalización y la de inicio sea menor de 7200 s (2 horas).
 
 ## `select`
 
-La función `select` nos permite seleccionar unas columnas determinadas en base a su nombre. Hay algunas funciones específicas, como `starts_with` o `contains`, que sólo funcionan dentro de `select` y que ayudan a identificar las columnas que nos interesen.
+La función `select` nos permite seleccionar unas columnas determinadas en base a su nombre. Hay algunas funciones específicas, como `starts_with` o `contains`, que sólo funcionan dentro de `select` y que ayudan a identificar las columnas que nos interesen. Podemos consultar la lista de funciones especiales si escribimos `help("select")`
 
 ###Ejercicio 4
-Para practicar la función `select` probemos a encontrar cuatro maneras distintas de seleccionar las variables que marcan la fecha de inicio y fin de medicion de las parcelas (FechaIni y FechaFin)
+Para practicar la función `select` probemos a encontrar cuatro maneras distintas de seleccionar las variables que marcan la fecha de inicio y fin de medición de las parcelas (FechaIni y FechaFin)
 
-* Por ejemplo, podemos especificar las columnas que queremos
+* Por ejemplo, podemos especificar expresamente las columnas que queremos seleccionar
 
 ``` {r, results="hide"}
 select(parcelas, FechaIni, FechaFin)
 ```
 
-* También podemos especificarlas como un rango, de manera que se seleccionan todas las columnas entre las dos especificadas.
+* También podemos especificarlas como un rango, de manera que se seleccionan todas las columnas entre las dos indicadas
 
 ``` {r, results="hide"}
 select(parcelas, FechaIni:FechaFin)
 ```
 
-* O las columnas que contienen el texto 'fecha'. En este caso, seleccionaremos también la fecha de medición del pH, que en principio no nos interesa, pero podemos eliminarla:
+* O podemos seleccionar todas las columnas que contienen el texto 'fecha'. En este caso, seleccionaremos también la fecha de medición del pH, que en principio no nos interesa, pero podemos eliminarla:
 
 ``` {r, results="hide"}
 select(parcelas, contains ("Fecha"),-FechaPh)
 ```
 
-* También podríamos seleccionar las variables que empiezan por 'fecha' (en este caso también tendríamos que eliminar FechaPh):
+* Por último, también podríamos seleccionar las variables que empiezan por 'fecha' (en este caso también tendríamos que eliminar FechaPh):
+
 ``` {r, results="hide"}
 select(parcelas, starts_with("Fecha"), -FechaPh)
 ```
@@ -251,6 +257,7 @@ select(parcelas, starts_with("Fecha"), -FechaPh)
 `arrange` ordena la base de datos en base a una o más variables. El primer argumento será, como siempre, el data frame que queremos reordenar, y después especificamos las variables que determinan la ordenación. Si especificamos más de 1 variable, las sucesivas variables servirán para romper los empates de las anteriores. También podemos usar 'desc(x)' para ordenar en orden decreciente. Probemos con unos cuantos ejercicios:
 
 ###Ejercicio 5
+
 * Ej.5.1 Ordenar las parcelas por fecha y hora de medición
 
 ```{r, results="hide"}
@@ -258,14 +265,17 @@ arrange(parcelas, FechaFin, HoraFin)
 ```
 
 * Ej. 5.2 ¿Qué parcelas se empezaron a medir más tarde en el día?
+
 ```{r, results="hide"}
 arrange(parcelas,desc(HoraIni))
 ```
 
 * Ej. 5.3 ¿Cuáles tardaron más en medirse?
+
 ```{r, results="hide"}
 arrange(parcelas, desc(HoraFin-HoraIni))
 ```
+
 Vemos que, igual que con `filter`, también podemos ordenar un data frame en base al resultado de una operación aritmética.
 
 
@@ -402,7 +412,7 @@ mayores %>%
 * 8.3 ¿Hay relación entre ambas variables?
 
 Primero, indicamos el data frame con el que trabajaremos, *LUEGO* agrupamos por parcela, *LUEGO* calculamos las nuevas variables.
-Para ver la relación entre ambas vamos a crear un gráfico con `ggplot2`, simplemente para mostrar cómo `dplyr` y `tidyr` se comunican con `ggplot2`. Como el objetivo de este workshop no es aprender a usar `ggplot`, de momento no daremos más detalles. Para saber más sobre este paquete de visualización, podéis visitar esta web: [http://ggplot2.org/](http://ggplot2.org/).
+Para ver la relación entre ambas vamos a crear un gráfico con `ggplot2`, simplemente para mostrar cómo `dplyr` y `tidyr` se comunican con este paquete. Como el objetivo de este workshop no es aprender a usar `ggplot2`, de momento no daremos más detalles. Para saber más sobre este paquete de visualización, podéis visitar esta web: [http://ggplot2.org/](http://ggplot2.org/).
 
 ```{r, results="hide"}
 mayores %>%
@@ -421,15 +431,16 @@ Aquí estamos viendo una de las ventajas del `tidyverse`, el hecho de que los paq
 
 La mayor parte de las veces que usmos `group_by`, lo haremos con las llamadas *summary functions*, es decir, funciones que toman n valores como input, y devuelven 1 valor como output. Ejemplos de *summary functions* son `mean()`, `sd()`, `min()`, `sum()`, etc. 
 
-Otras veces, sin embargo, necesitamos realizar operaciones por grupo, pero que el output sea por caso, es decir n inputs --> n outputs. Esto se puede hacer pefectamente usando `mutate` o `filter`en combinación con `group_by`.
+Otras veces, sin embargo, necesitamos realizar operaciones por grupo, pero que el output sea por caso, es decir n inputs --> n outputs. Esto se puede hacer pefectamente usando `mutate` o `filter` en combinación con `group_by`.
 
 ###Ejercicio 9
+
 Teniendo esto que acabamos de ver en cuenta, probemos a:
 
 * 9.1 Identificar los árboles que crezcan mucho más que la media en esa parcela
 
 
-```{r}
+```{r, results="hide"}
 mayores %>%
     mutate(crec=DiamIf3-DiamIf2) %>%
     group_by(Codi) %>%
@@ -461,13 +472,17 @@ Del mismo modo que antes, primero calculamos el crecimento para cada árbol. Post
 
 # Do
 
-En ocasiones, ninguno de los verbos implementados en `dplyr` será suficiente, y necesitaremos implementar otras funciones por grupo. Esto se puede conseguir con la función `do`. Esta función es mucho más lenta que los verbos implementados por defecto, pero permite aplicar cualquier tipo de función. Como la función que incluiremos en `do` no tiene porqué entender los pipelines (`%>%`), la función o verbo `do` requiere un pronombre (`.`) para indicar que la función se aplica al grupo definido antes. Así, podemos por ejemplo usarla para observar las tres primeras líneas de cada parcela y especie, mediante la función `head`:
+En ocasiones, ninguno de los verbos implementados en `dplyr` será suficiente, y necesitaremos implementar otras funciones, ya existentes o creadas expresamente por nosotros. Esto se puede conseguir con la función `do`. Esta función es mucho más lenta que los verbos implementados por defecto, pero permite aplicar cualquier tipo de función. Como la función que incluiremos en `do` no tiene porqué entender los pipelines (`%>%`), la función o verbo `do` requiere un pronombre (`.`) para indicar que la función se aplica al grupo definido antes. Así, de la misma forma que la función head nos da las primeras n lineas de un data frame
 
 ```{r Ejemplo do 1}
 head(mayores, 3)
+```
 
+podemos por ejemplo usar la función `do` para obtener las tres primeras líneas de cada parcela, usándola junto con la función `head`:
+
+```{r}
 mayores %>%
-    group_by(Codi, Especie) %>%
+    group_by(Codi) %>%
     do(head(., 3))
 
 ```
@@ -590,7 +605,7 @@ Otro aspecto interesante de `dplyr` es que permite guardar las secuencias de órd
         
 ```
 
-Si imprimimos el objeto, vemos que tiene un formato `functional sequence`, y nos especifica las oórdenes que ejecuta:
+Si imprimimos el objeto, vemos que tiene un formato `functional sequence`, y nos especifica las órdenes que ejecuta:
 ```{r}
 crec_medio
 ```
@@ -601,7 +616,7 @@ Después podremos aplicar esta secuencia a un data frame...
     mayores %>% crec_medio()
 ```
 
-... o combinarlo con nuevas órdenes de `dplyr`o `tidyr`
+... o combinarlo con nuevas órdenes de `dplyr` o `tidyr`
 ```{r ejemplo functional sequence 3}
     mayores %>%
         filter(Provincia=="17") %>%
