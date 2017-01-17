@@ -4,7 +4,7 @@ library(tidyverse)
 
 
 ## Pies mayores
-    mayores <- read_delim("~/Dropbox (FiDBosc)/Research/dplyr_workshop/data_raw/mayores_IFN2_IFN3.txt", 
+    mayores <- read_delim("./data_raw/mayores_IFN2_IFN3.txt", 
         "\t", escape_double = FALSE, trim_ws = TRUE)
     mayores <- tbl_df(mayores)
     mayores$CD[mayores$CD == 53] <- 55
@@ -65,7 +65,7 @@ library(tidyverse)
     save(especies, file="./data/especies.Rdata")
 
 ## Coordenadas de las parcelas
-    coordenadas <- read_delim("~/Dropbox (FiDBosc)/Research/dplyr_workshop/data_raw/ParcelasMapa.txt", 
+    coordenadas <- read_delim("./data_raw/ParcelasMapa.txt", 
                               "\t", escape_double = FALSE, trim_ws = TRUE)
     
     coordenadas <-  select(coordenadas, Codi,Provincia, Estadillo, Cla=Clase, CoorX, CoorY)
