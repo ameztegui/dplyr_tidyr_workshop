@@ -444,6 +444,12 @@ Vemos que la salida de datos crea una columna, llamada `mod` (el nombre lo hemos
 models$mod[models$Especie=="021"]
 ```
 
+o bien podríamos hacer
+
+```{r}
+filter(models, Especie =="021")$mod
+```
+
 
 \newpage
 
