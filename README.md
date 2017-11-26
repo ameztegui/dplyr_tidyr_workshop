@@ -1,6 +1,6 @@
 # dplyr and tidyr workshop
 
-Este repositorio contiene el codigo, ejemplos y ejercicios utilizados durante el seminario de dplyr y tidyr que tuvo lugar en Solsona, el 24 de enero de 2017. El texto para seguir el workshop se puede encontrar [aquí](R/workshop_exercises.html), y se puede descargar también como un [pdf](R/workshop_exercises.pdf)
+Este repositorio contiene el codigo, ejemplos y ejercicios utilizados durante el seminario de dplyr y tidyr que tuvo lugar en Solsona, el 24 de enero de 2017. El texto para seguir el workshop se puede encontrar [aquí](R/workshop_exercices.html), y se puede descargar también como un [pdf](R/workshop_exercices.pdf)
 
 ## Contenido
 El workshop cubre las principales funciones de los paquetes [dplyr](dplyr.tidyverse.org) y [tidyr](tidyr.tidyverse.org), ambos incluídos en el `tidyverse`, desarrollado por Hadley Wickham. Dichas funciones incluyen verbos como `mutate`, `summarise`, `select` o `filter`, así como la transformación de los datos de acuerdo al principio del `tidy data`, usando verbos como `gather`y `spread`. Finalment, tambié cubre las distintas opciones de unión de dos tablas mediante `join`, e introduce algunas otras funciones más avanzadas de los paquetes `dplyr`,`tidyr`y `purrr`. Para más información sobre dichos paquetes y sus funciones, se recomienda consultar [R for data science](http://r4ds.had.co.nz/), de Hadley Wickham, o la página web del `tidyverse`.
