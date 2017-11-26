@@ -1,14 +1,17 @@
 ---
-title: 'Ejercicios y soluciones del workshop sobre `dplyr` y `tidyr`'
+title: "Ejercicios y soluciones del workshop sobre `dplyr` y `tidyr`"
 author: "Aitor Ameztegui"
 date: "Enero de 2017"
 output:
+  html_document:
+    toc: yes
   pdf_document:
     toc: yes
   word_document:
     toc: yes
 fontsize: 12pt
-description: Ejercicios y soluciones durante el seminario 'dplyr y tidyr' realizado en Solsona el 24 de enero de 2017
+description: Ejercicios y soluciones durante el seminario 'dplyr y tidyr' realizado
+  en Solsona el 24 de enero de 2017
 ---
 \newpage
 
@@ -485,7 +488,7 @@ left_join(parcelas,coordenadas, "Codi")
 
 En este caso, como queremos mantener todas las parcelas del data frame original, la función a usar sería `left_join`. En cualquier caso, como el número de observaciones `coordenadas`y en `parcelas`es el mismo, la función `inner_join`debería darnos el mismo resultado.
 
-Ahora que tenemos las coordenadas añadidas, podemos representar en un mapa cualquier variable del data frame `coor`. En este caso, vamos a representar los valores de FCC arbolada (FccArb). Para ello necesitamos tener instalado el paquete "maps"
+Ahora que tenemos las coordenadas añadidas, podemos representar en un mapa cualquier variable del data frame `coor`. En este caso, vamos a representar los valores de FCC arbolada (FccArb). Para ello necesitamos tener instalado el paquete "maps". (Si no lo tenemos, podemos instalarlo escribiendo en la consola de Rstudio `install.packages("maps")`).
 
 ```{r, results="hide"}
 library(maps)
