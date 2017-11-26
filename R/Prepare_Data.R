@@ -19,8 +19,6 @@ library(tidyverse)
     mayores$Subclase <- as.factor(mayores$Subclase)
     mayores$Especie <- as.factor(mayores$Especie)
 
-    save(mayores,file="./data/mayores.Rdata")
-    
     
 ## Parcelas    
     parcelas <- read_delim("./data_raw/Parcelas.txt", 
@@ -51,8 +49,6 @@ library(tidyverse)
     parcelas$HoraPh <- as.POSIXct(strptime(parcelas$HoraPh, format="%H:%M:%S"))
     
     parcelas <- select (parcelas, Codi:FechaPh)
-    save(parcelas, file="./data/parcelas.Rdata")
-
     
 ## CD por parcela y especie   
     especies <- mayores %>%
@@ -62,7 +58,6 @@ library(tidyverse)
     especies[is.na(especies)] <- 0
     colnames(especies)[3:15] <- paste0("CD_",colnames(especies)[3:15] )
     especies$Codi <- as.factor(especies$Codi)
-    save(especies, file="./data/especies.Rdata")
 
 ## Coordenadas de las parcelas
     coordenadas <- read_delim("./data_raw/ParcelasMapa.txt", 
@@ -73,5 +68,8 @@ library(tidyverse)
     coordenadas$Codi <- as.factor(coordenadas$Codi)
     coordenadas$Cla <- as.factor(coordenadas$Cla)
 
-    save(coordenadas, file="./data/coordenadas.Rdata")
+    
+    
+    save(mayores,parcelas, especies, coordenadas, file="./data/data_workshop.Rdata")
+
     
