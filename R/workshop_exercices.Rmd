@@ -25,16 +25,11 @@ Además deberemos cargar los datos que utilizaremos durante el seminario, que se 
 
 ```{r introduccion, message=F, warning=FALSE, results="hide"}
 
-load("../data/mayores.Rdata")
+load("../data/data_workshop.Rdata")
+
 mayores <- tbl_df(mayores)
-
-load("../data/parcelas.Rdata")
 parcelas <- tbl_df(parcelas)
-
-load("../data/especies.Rdata")
 especies <- tbl_df(especies)
-
-load("../data/coordenadas.Rdata")
 coordenadas <- tbl_df(coordenadas)
 
 ```
