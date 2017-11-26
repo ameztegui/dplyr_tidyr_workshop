@@ -1,0 +1,13 @@
+To reference this workshop in publications, please cite the following:
+
+Aitor Ameztegui (2017) dplyr and tidyr workshop: Data science with the tidyverse. 
+GitHub repository, https://github.com/ameztegui/dplyr_workshop
+
+@misc{Ameztegui2017,
+  author = {Ameztegui, A.},
+  title = {dplyr_workshop},
+  year = {2017},
+  publisher = {GitHub},
+  journal = {GitHub repository},
+  howpublished = {\url{https://github.com/ameztegui/dplyr_workshop}}
+}
