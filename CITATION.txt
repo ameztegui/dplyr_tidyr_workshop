@@ -12,5 +12,3 @@ GitHub repository, https://github.com/ameztegui/dplyr_workshop
   doi = {10.5281/zenodo.3951357}
   howpublished = {\url{https://github.com/ameztegui/dplyr_workshop}}
 }
-
-[![DOI](https://zenodo.org/badge/79127907.svg)](https://zenodo.org/badge/latestdoi/79127907)
