@@ -9,5 +9,8 @@ GitHub repository, https://github.com/ameztegui/dplyr_workshop
   year = {2017},
   publisher = {GitHub},
   journal = {GitHub repository},
+  doi = {10.5281/zenodo.3951357}
   howpublished = {\url{https://github.com/ameztegui/dplyr_workshop}}
 }
+
+[![DOI](https://zenodo.org/badge/79127907.svg)](https://zenodo.org/badge/latestdoi/79127907)
