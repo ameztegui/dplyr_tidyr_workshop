@@ -1,14 +1,15 @@
 To reference this workshop in publications, please cite the following:
 
-Aitor Ameztegui (2017) dplyr and tidyr workshop: Data science with the tidyverse. 
-GitHub repository, https://github.com/ameztegui/dplyr_workshop
+Aitor Ameztegui. (2017). dplyr and tidyr workshop: Data science with the tidyverse (Version 1.0). Zenodo. http://doi.org/10.5281/zenodo.3951357
 
-@misc{Ameztegui2017,
-  author = {Ameztegui, A.},
-  title = {dplyr_workshop},
-  year = {2017},
-  publisher = {GitHub},
-  journal = {GitHub repository},
-  doi = {10.5281/zenodo.3951357}
-  howpublished = {\url{https://github.com/ameztegui/dplyr_workshop}}
+@misc{aitor_ameztegui_2017_3951357,
+  author       = {Aitor Ameztegui},
+  title        = {{dplyr and tidyr workshop: Data science with the 
+                   tidyverse}},
+  month        = jan,
+  year         = 2017,
+  publisher    = {Zenodo},
+  version      = {1.0},
+  doi          = {10.5281/zenodo.3951357},
+  url          = {https://doi.org/10.5281/zenodo.3951357}
 }
